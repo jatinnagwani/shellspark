@@ -19,7 +19,10 @@ import {
   warning,
   info,
   banner,
-  rainbow
+  rainbow,
+  box,
+  spinner,
+  progressBar
 } from "shellspark";
 
 success("Server started successfully!");
@@ -28,7 +31,13 @@ warning("Memory usage is high!");
 info("Shellspark is ready!");
 
 banner("Welcome to Shellspark");
-rainbow("Ignite your terminal!");
+box("Ignite your terminal!");
+rainbow("Make your terminal colourful!");
+
+const loading = spinner("Loading...");
+loading.stop("Ready!");
+
+progressBar(75);
 ```
 
 ## Features
@@ -45,6 +54,7 @@ rainbow("Ignite your terminal!");
 
 ### ASCII Design
 - `banner()` – Decorative terminal banners
+- `box()` – Text inside decorative boxes
 - `center()` – Center-aligned text
 - `frame()` – Text inside decorative frames
 - `logo()` – Shellspark ASCII logo
@@ -65,14 +75,14 @@ rainbow("Ignite your terminal!");
 
 ### Developer Utilities
 - `table()` – Formatted terminal tables
-- `timestamp()` – Date and time formatting
+- `timestamp()` – Date and time formatting with locale support
 - `json()` – Formatted JSON output
 
 ## Requirements
 
-- Node.js
+- Node.js 18 or higher
 - npm
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
