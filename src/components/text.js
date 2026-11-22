@@ -72,38 +72,63 @@ export const progressBar = (progress, total = 100, width = 30) => {
   const filled = Math.round((percentage / 100) * width);
   const empty = width - filled;
 
-  const bar = chalk.green("█".repeat(filled)) +
+  const bar =
+    chalk.green("█".repeat(filled)) +
     chalk.gray("░".repeat(empty));
 
   console.log(`[${bar}] ${percentage}%`);
+
+  return percentage;
 };
 
 export const spinner = (message = "Loading...") => {
+  if (typeof message !== "string" || message.trim().length === 0) {
+    throw new Error("Spinner message must be a non-empty string.");
+  }
+
   const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
   let index = 0;
+  let stopped = false;
 
   const interval = setInterval(() => {
     process.stdout.write(
-      `\r${chalk.cyan(frames[index++ % frames.length])} ${message}`
+      `\r\x1b[2K${chalk.cyan(frames[index % frames.length])} ${message}`
     );
+    index++;
   }, 100);
 
   return {
     stop(finalMessage = "Done!") {
+      if (stopped) return;
+
+      if (typeof finalMessage !== "string") {
+        throw new Error("Final message must be a string.");
+      }
+
+      stopped = true;
       clearInterval(interval);
-      process.stdout.write(`\r\x1b[2K${chalk.green("✔")} ${finalMessage}\n`);
+
+      process.stdout.write(
+        `\r\x1b[2K${chalk.green("✔")} ${finalMessage}\n`
+      );
     }
   };
 };
 
 export const typing = (message, speed = 50) => {
   return new Promise((resolve, reject) => {
-    if (typeof message !== "string" || !Number.isFinite(speed) || speed < 0) {
+    if (
+      typeof message !== "string" ||
+      !Number.isFinite(speed) ||
+      speed < 0
+    ) {
       reject(new Error("Invalid message or typing speed."));
       return;
     }
 
-    if (message.length === 0) {
+    const characters = [...message];
+
+    if (characters.length === 0) {
       process.stdout.write("\n");
       resolve();
       return;
@@ -112,10 +137,10 @@ export const typing = (message, speed = 50) => {
     let index = 0;
 
     const interval = setInterval(() => {
-      process.stdout.write(message[index]);
+      process.stdout.write(characters[index]);
       index++;
 
-      if (index >= message.length) {
+      if (index >= characters.length) {
         clearInterval(interval);
         process.stdout.write("\n");
         resolve();
@@ -192,6 +217,12 @@ export const countdown = (seconds = 5) => {
   }
 
   return new Promise((resolve) => {
+    if (seconds === 0) {
+      console.log(chalk.green("GO!"));
+      resolve();
+      return;
+    }
+
     let remaining = seconds;
 
     console.log(chalk.yellow(remaining));
@@ -199,12 +230,12 @@ export const countdown = (seconds = 5) => {
     const interval = setInterval(() => {
       remaining--;
 
-      if (remaining > 0) {
-        console.log(chalk.yellow(remaining));
-      } else {
+      if (remaining === 0) {
         clearInterval(interval);
         console.log(chalk.green("GO!"));
         resolve();
+      } else {
+        console.log(chalk.yellow(remaining));
       }
     }, 1000);
   });

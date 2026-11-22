@@ -121,9 +121,12 @@ test("coinFlip should return Heads or Tails", async () => {
   });
 });
 
-test("progressBar should execute with valid values", async () => {
+test("progressBar should return the correct percentage", async () => {
   await silenceLogs(() => {
-    assert.doesNotThrow(() => progressBar(50));
+    assert.equal(progressBar(50), 50);
+    assert.equal(progressBar(25, 50), 50);
+    assert.equal(progressBar(100), 100);
+    assert.equal(progressBar(0), 0);
   });
 });
 
@@ -197,4 +200,21 @@ test("spinner and pulse should return stoppable animations", () => {
   const animation = pulse("Testing");
   assert.equal(typeof animation.stop, "function");
   animation.stop();
+});
+
+test("animation functions should handle edge cases", async () => {
+  // Spinner validation and repeated stop
+  assert.throws(() => spinner(""));
+
+  const loading = spinner("Testing");
+  assert.doesNotThrow(() => loading.stop());
+  assert.doesNotThrow(() => loading.stop());
+
+  // Typing should support emojis
+  await assert.doesNotReject(() => typing("🔥", 0));
+
+  // Zero-second countdown should complete immediately
+  await silenceLogs(async () => {
+    await countdown(0);
+  });
 });
