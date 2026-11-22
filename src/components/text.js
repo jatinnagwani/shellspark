@@ -169,13 +169,21 @@ export const highlight = (message, color = "yellow") => {
 };
 
 export const center = (message, width = process.stdout.columns || 80) => {
-  if (typeof message !== "string" || !Number.isInteger(width) || width < 1) {
+  if (
+    typeof message !== "string" ||
+    message.trim().length === 0 ||
+    !Number.isInteger(width) ||
+    width < 1
+  ) {
     throw new Error("Invalid message or width.");
   }
 
-  const padding = Math.max(0, Math.floor((width - message.length) / 2));
+  const lines = message.split("\n");
 
-  console.log(" ".repeat(padding) + message);
+  lines.forEach(line => {
+    const padding = Math.max(0, Math.floor((width - line.length) / 2));
+    console.log(" ".repeat(padding) + line);
+  });
 };
 
 export const countdown = (seconds = 5) => {

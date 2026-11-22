@@ -1,14 +1,28 @@
 import chalk from "chalk";
 
 export const banner = (message) => {
-  const border = "═".repeat(message.length + 4);
+  if (typeof message !== "string" || message.trim().length === 0) {
+    throw new Error("Banner message must be a non-empty string.");
+  }
 
-  console.log(chalk.cyan(border));
-  console.log(chalk.cyan(`║ ${message} ║`));
-  console.log(chalk.cyan(border));
+  const lines = message.split("\n");
+  const width = Math.max(...lines.map(line => line.length));
+  const border = "═".repeat(width + 4);
+
+  console.log(chalk.cyan(`╔${border}╗`));
+
+  lines.forEach(line => {
+    console.log(chalk.cyan(`║  ${line.padEnd(width)}  ║`));
+  });
+
+  console.log(chalk.cyan(`╚${border}╝`));
 };
 
 export const box = (message) => {
+  if (typeof message !== "string" || message.trim().length === 0) {
+    throw new Error("Box message must be a non-empty string.");
+  }
+
   const lines = message.split("\n");
   const width = Math.max(...lines.map(line => line.length));
   const border = "─".repeat(width + 4);
@@ -23,6 +37,10 @@ export const box = (message) => {
 };
 
 export const frame = (message) => {
+  if (typeof message !== "string" || message.trim().length === 0) {
+    throw new Error("Frame message must be a non-empty string.");
+  }
+
   const lines = message.split("\n");
   const width = Math.max(...lines.map(line => line.length));
   const border = "═".repeat(width + 4);

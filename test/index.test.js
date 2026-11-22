@@ -87,6 +87,20 @@ test("banner and layout functions should execute", async () => {
   });
 });
 
+test("ASCII design functions should reject invalid inputs", () => {
+  assert.throws(() => banner(""));
+  assert.throws(() => banner(123));
+
+  assert.throws(() => box(""));
+  assert.throws(() => box(null));
+
+  assert.throws(() => frame(""));
+  assert.throws(() => frame(123));
+
+  assert.throws(() => center(""));
+  assert.throws(() => center("Test", 0));
+});
+
 test("diceRoll should return a number within range", async () => {
   await silenceLogs(() => {
     const result = diceRoll(20);
