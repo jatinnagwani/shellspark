@@ -48,11 +48,18 @@ export const diceRoll = (sides = 6) => {
 };
 
 export const party = (message = "LET'S GOOO!") => {
+  if (typeof message !== "string" || message.trim().length === 0) {
+    throw new Error("Party message must be a non-empty string.");
+  }
+
   const celebration = ["🎉", "✨", "🎊", "🚀"];
 
-  console.log(
-    `${celebration.join(" ")} ${chalk.magenta.bold(message)} ${celebration.join(" ")}`
-  );
+  const result =
+    `${celebration.join(" ")} ${chalk.magenta.bold(message)} ${celebration.join(" ")}`;
+
+  console.log(result);
+
+  return result;
 };
 
 export const progressBar = (progress, total = 100, width = 30) => {
@@ -284,11 +291,12 @@ export const pulse = (message, duration = 3000) => {
 
 
 export const glitch = (message) => {
-  if (typeof message !== "string") {
-    throw new Error("Message must be a string.");
+  if (typeof message !== "string" || message.length === 0) {
+    throw new Error("Message must be a non-empty string.");
   }
 
   const glitchChars = "!@#$%&*01▓▒░";
+
   const glitched = [...message]
     .map((char) =>
       Math.random() < 0.2
@@ -298,6 +306,8 @@ export const glitch = (message) => {
     .join("");
 
   console.log(chalk.red.bold(glitched));
+
+  return glitched;
 };
 
 export const coinFlip = () => {

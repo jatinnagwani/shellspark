@@ -137,12 +137,27 @@ test("progressBar should reject invalid values", () => {
   assert.throws(() => progressBar(50, 100, 0));
 });
 
-test("fun utility functions should execute", async () => {
+test("fun utility functions should return valid results", async () => {
   await silenceLogs(() => {
-    assert.doesNotThrow(() => glitch("Test"));
-    assert.doesNotThrow(() => randomQuote());
-    assert.doesNotThrow(() => party("Test"));
+    const glitched = glitch("Hello");
+    assert.equal(typeof glitched, "string");
+    assert.equal(glitched.length, 5);
+
+    const quote = randomQuote();
+    assert.equal(typeof quote, "string");
+    assert.ok(quote.length > 0);
+
+    const celebration = party("Test");
+    assert.equal(typeof celebration, "string");
+    assert.ok(celebration.includes("Test"));
   });
+});
+
+test("fun utility functions should reject invalid messages", () => {
+  assert.throws(() => glitch(""));
+  assert.throws(() => glitch(123));
+  assert.throws(() => party(""));
+  assert.throws(() => party(123));
 });
 
 test("table should execute with valid data", async () => {
