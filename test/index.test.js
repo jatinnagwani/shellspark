@@ -166,20 +166,35 @@ test("table should execute with valid data", async () => {
       ["Name", "Age"],
       [["Jatin", 19]]
     ));
+
+    assert.doesNotThrow(() => table(
+      ["Name", "Age"],
+      []
+    ));
   });
 });
 
-test("timestamp should return a formatted date", async () => {
+test("table should reject invalid data", () => {
+  assert.throws(() => table([], []));
+  assert.throws(() => table(["Name"], "invalid"));
+  assert.throws(() => table(["Name", "Age"], [["Jatin"]]));
+  assert.throws(() => table(["Name"], [null]));
+  assert.throws(() => table([null], []));
+});
+
+test("timestamp should support custom locales", async () => {
   await silenceLogs(() => {
-    const result = timestamp("2026-01-01");
+    const result = timestamp("2026-01-01", "en-IN");
 
     assert.equal(typeof result, "string");
     assert.ok(result.length > 0);
   });
 });
 
-test("timestamp should reject invalid dates", () => {
+test("timestamp should reject invalid dates and locales", () => {
   assert.throws(() => timestamp("invalid-date"));
+  assert.throws(() => timestamp("2026-01-01", 123));
+  assert.throws(() => timestamp("2026-01-01", "en_US"));
 });
 
 test("json should return formatted JSON", async () => {

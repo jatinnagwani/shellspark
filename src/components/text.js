@@ -336,14 +336,24 @@ export const randomQuote = () => {
   return quote;
 };
 
-export const timestamp = (date = new Date()) => {
+export const timestamp = (date = new Date(), locale = undefined) => {
   const value = new Date(date);
 
   if (Number.isNaN(value.getTime())) {
     throw new Error("Invalid date.");
   }
 
-  const formatted = value.toLocaleString();
+  if (locale !== undefined && typeof locale !== "string") {
+    throw new Error("Locale must be a string.");
+  }
+
+  let formatted;
+
+  try {
+    formatted = value.toLocaleString(locale);
+  } catch {
+    throw new Error("Invalid locale.");
+  }
 
   console.log(chalk.gray(`🕒 ${formatted}`));
 
