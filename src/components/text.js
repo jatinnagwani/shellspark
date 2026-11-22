@@ -2,10 +2,23 @@ import chalk from "chalk";
 import gradientString from "gradient-string";
 
 export const divider = (character = "─", length = 40) => {
+  if (
+    typeof character !== "string" ||
+    character.length === 0 ||
+    !Number.isInteger(length) ||
+    length < 1
+  ) {
+    throw new Error("Invalid divider character or length.");
+  }
+
   console.log(chalk.gray(character.repeat(length)));
 };
 
 export const rainbow = (message) => {
+  if (typeof message !== "string" || message.length === 0) {
+    throw new Error("Message must be a non-empty string.");
+  }
+
   const colors = [
     chalk.red,
     chalk.yellow,
@@ -116,10 +129,27 @@ export const gradient = (
   startColor = "#ff0000",
   endColor = "#0000ff"
 ) => {
+  if (typeof message !== "string" || message.length === 0) {
+    throw new Error("Message must be a non-empty string.");
+  }
+
+  if (
+    typeof startColor !== "string" ||
+    typeof endColor !== "string" ||
+    !startColor.trim() ||
+    !endColor.trim()
+  ) {
+    throw new Error("Gradient colors must be non-empty strings.");
+  }
+
   console.log(gradientString(startColor, endColor)(message));
 };
 
 export const highlight = (message, color = "yellow") => {
+  if (typeof message !== "string" || message.trim().length === 0) {
+    throw new Error("Message must be a non-empty string.");
+  }
+
   const colors = {
     yellow: chalk.yellow,
     green: chalk.green,

@@ -52,6 +52,31 @@ test("message and styling functions should execute", async () => {
   });
 });
 
+test("core styling functions should reject invalid inputs", () => {
+  // Message functions
+  assert.throws(() => success(""));
+  assert.throws(() => error(123));
+  assert.throws(() => warning(""));
+  assert.throws(() => info(null));
+
+  // Divider
+  assert.throws(() => divider("", 40));
+  assert.throws(() => divider("─", 0));
+
+  // Rainbow
+  assert.throws(() => rainbow(""));
+  assert.throws(() => rainbow(123));
+
+  // Gradient
+  assert.throws(() => gradient(""));
+  assert.throws(() => gradient("Test", "", "#0000ff"));
+  assert.throws(() => gradient("Test", "#ff0000", ""));
+
+  // Highlight
+  assert.throws(() => highlight(""));
+  assert.throws(() => highlight("Test", "invalid"));
+});
+
 test("banner and layout functions should execute", async () => {
   await silenceLogs(() => {
     assert.doesNotThrow(() => banner("Test"));
